@@ -1,0 +1,79 @@
+% This routine overplots pano field-of-view (fov) on top of Lick Allsky and
+% skycam2 images. Equatorial mounts are assumed for Panoseti telescopes regarding the field-of-view
+% orientation (Position Angle), also working for alt-az mounts observing at meridian 
+% 
+%
+%close all
+%clear all
+%% enter below the local directory of the Lick webcam images:
+webcrep='/Users/jeromemaire/Documents/SETI/PANOSETI/webc/'; % the directory of the Lick webcam images
+choosewebcam=1; %=1 reduces Lick AllSky images; =2 reduces Lick SkyCam2 images
+dateproc='20230910'; % to search the proper panoseti astrometry, enter the date of the Lick webcam images as yyyyMMdd of the 
+
+if choosewebcam==1
+webcamname='Sky';
+    %Allsky Lick 
+    fwebc=dir([webcrep  '*' webcamname '_*']);
+elseif choosewebcam==2
+    webcamname='Sky2';%skycam2 Lick
+    fwebc=dir([webcrep  '*' webcamname '*']);
+end
+
+
+
+firstimc=1;
+%filename=strtrim([webcrep webcamname dateproc '.gif']);
+tic
+for ii=firstimc:size(fwebc,1)
+    
+    figure('Position',[40 40 1200 800],'Color','w')
+   
+    imawc=imread([webcrep fwebc(ii).name]);
+    
+    hold on
+
+    him=imagesc(imawc);
+    
+    set(gca,'YDir','Reverse')
+    axis image
+    
+    
+    %%%% Manually entered coordinates corresponding to Pano fov in 2023-09:
+    if choosewebcam==1
+ %Allsky Lick 
+ %location of zenith in pixel (assuming origin in top-left corner of the lick webcam image, x-axis going down, y-axis going right)
+        cx1=278;
+        cx2=318; %1..480
+        cy1=310;
+        cy2=352;%1..640
+        decy=0;
+elseif choosewebcam==2
+%skycam2 
+        cx1=293;
+        cx2=343; %1..521
+        cy1=340;
+        cy2=405;%1..765
+        decy=14;
+end
+    plot([cy1+decy cy1],[cx1 cx2],'r-','Linewidth',3)
+    plot([cy2 cy2-decy],[cx1 cx2]+decy,'r-','Linewidth',3)
+    plot([cy1+decy cy2],[cx1 cx1+decy],'r-','Linewidth',3)
+    plot([cy1 cy2-decy],[cx2 cx2+decy],'r-','Linewidth',3)
+    
+    
+     %%%% automated calculations of Pano fov location:
+     [xcorners,ycorners] = altaz_to_image_2Dcoordinates(webcamname, dateproc)
+  
+    plot([ycorners(1) ycorners(2)],[xcorners(1) xcorners(2)],'g--','Linewidth',3)
+    plot([ycorners(2) ycorners(3)],[xcorners(2) xcorners(3)],'g-.','Linewidth',3)
+    plot([ycorners(3) ycorners(4)],[xcorners(3) xcorners(4)],'g-','Linewidth',3)
+    plot([ycorners(4) ycorners(1)],[xcorners(4) xcorners(1)],'g-','Linewidth',3)
+    
+    ti=title(['Lick ' webcamname '  ' char(fwebc(ii).name)] );
+
+    set(ti,'Interpreter','none')
+    
+    
+    drawnow
+    
+end
