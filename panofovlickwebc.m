@@ -7,16 +7,15 @@
 %clear all
 %% Modify the following parameters:
 webcrep='/Users/jeromemaire/Documents/SETI/PANOSETI/webc/'; % the directory of the Lick webcam images
-choosewebcam=1; %=1 reduces Lick AllSky images; =2 reduces Lick SkyCam2 images
+choosewebcam=1; %=1 reduces Lick AllSky images (skycam2); =2 reduces Lick SkyCam images
 dateproc='20230910'; % to search the proper panoseti astrometry, enter the date of the Lick webcam images as yyyyMMdd of the 
 %%%
 
 if choosewebcam==1
-webcamname='Sky';
-    %Allsky Lick 
+webcamname='SC'; %skycam
     fwebc=dir([webcrep  '*' webcamname '_*']);
-elseif choosewebcam==2
-    webcamname='Sky2';%skycam2 Lick
+elseif choosewebcam==2 %skycam2
+    webcamname='SC2';%skycam2 Lick
     fwebc=dir([webcrep  '*' webcamname '*']);
 end
 
@@ -40,16 +39,16 @@ for ii=firstimc:size(fwebc,1)
     
     
     %%%% Manually hard-coded coordinates corresponding to Pano fov in 2023-09:
-    if choosewebcam==1
- %Allsky Lick 
+    if choosewebcam==2
+ %Allsky Lick skycam2
  %location of zenith in pixel (assuming origin in top-left corner of the lick webcam image, x-axis going down, y-axis going right)
         cx1=278;
         cx2=318; %1..480
         cy1=310;
         cy2=352;%1..640
         decy=0;
-elseif choosewebcam==2
-%skycam2 
+elseif choosewebcam==1
+%skycam 
         cx1=293;
         cx2=343; %1..521
         cy1=340;

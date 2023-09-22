@@ -45,18 +45,18 @@ astromAz=table2array(astrom(idx,4))
 ptscarre=makesquarefovs(astromAz/180.*pi, astromAlt/180.*pi);
 
 
-%fix skycam2 webcam misorientation of N/S and up/down axis (~18deg)
-if strcmp(webcamname,'Sky2')
+%fix skycam misorientation of N/S and up/down axis (~18deg)
+if ~strcmp(webcamname,'SC2') %for SC:
  Rz=rotz(-18/180*pi); Rz=Rz(1:3,1:3);
  ptscarre=ptscarre*Rz;
 end
 
 
-if strcmp(webcamname,'Sky2')
+if ~strcmp(webcamname,'SC2') %for SC:
     yzenith=385 %zenith coordinates in pixels
     xzenith=263 %zenith coordinates in pixels
     pix2pi=630/2/90;%angular scale in pixel per degree
-else
+else %for SC2:
     yzenith=325 %zenith coordinates in pixels
     xzenith=247 %zenith coordinates in pixels
     pix2pi=480/2/90;
