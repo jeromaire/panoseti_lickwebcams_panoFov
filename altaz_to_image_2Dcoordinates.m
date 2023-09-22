@@ -55,17 +55,15 @@ end
 if strcmp(webcamname,'Sky2')
     yzenith=385 %zenith coordinates in pixels
     xzenith=263 %zenith coordinates in pixels
-    pix2deg=630/2/90;
-    pix2pi=630/2;
+    pix2pi=630/2/90;%angular scale in pixel per degree
 else
     yzenith=325 %zenith coordinates in pixels
     xzenith=247 %zenith coordinates in pixels
-    pix2deg=480/2/90;
-    pix2pi=480/2;
+    pix2pi=480/2/90;
 end
 
-xcorners=xzenith+pix2pi*ptscarre(:,1)
-ycorners=yzenith-pix2pi*ptscarre(:,2)
+xcorners=xzenith+90.*pix2pi*ptscarre(:,1) %factor 90 to take into account the full extent of altitude range in the image
+ycorners=yzenith-90.*pix2pi*ptscarre(:,2) %factor 90 for full extent of altitude range in the image
 
 
 % disp('ptscarre:')
